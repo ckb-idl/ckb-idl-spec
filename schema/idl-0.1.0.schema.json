@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ckb-idl.org/schema/idl-0.1.0.schema.json",
+  "title": "CKB IDL 0.1.0",
+  "type": "object",
+  "required": ["idl_version", "encoding", "witness"],
+  "additionalProperties": false,
+  "properties": {
+    "idl_version": { "const": "0.1.0" },
+    "encoding": {
+      "type": "object",
+      "required": ["id"],
+      "properties": { "id": { "const": "ckb-idl-linear-0.1.0" } },
+      "additionalProperties": true
+    },
+    "witness": { "type": "array", "items": { "$ref": "#/$defs/field" } }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": ["name", "type", "required"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "wire_type": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "description": { "type": "string" },
+        "items": { "$ref": "#/$defs/field" },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/field" } },
+        "variants": { "type": "array", "items": { "$ref": "#/$defs/variant" } }
+      },
+      "additionalProperties": false
+    },
+    "variant": {
+      "type": "object",
+      "required": ["tag", "name", "fields"],
+      "properties": {
+        "tag": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "name": { "type": "string", "minLength": 1 },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/field" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

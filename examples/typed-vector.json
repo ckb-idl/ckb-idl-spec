@@ -1,0 +1,1 @@
+{"encoding":{"id":"ckb-idl-linear-0.1.0"},"idl_version":"0.1.0","witness":[{"items":{"type":"secp256k1_sig","wire_type":"bytes_fixed_65"},"name":"signatures","required":true,"type":"vector"}]}
