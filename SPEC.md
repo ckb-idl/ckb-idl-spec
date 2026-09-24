@@ -13,9 +13,13 @@ This is the entry point for the language-neutral CKB IDL draft.
 - [Client object model](client-object-model.md)
 - [Conformance vectors](test-vectors/README.md)
 
-Every document has `idl_version`, `encoding`, and `witness`:
+Every document has `idl_version` and `interfaces`. IDL 0.1.0 permits exactly one
+interface, of kind `witness_args.lock`:
 
 ```json
-{"idl_version":"0.1.0","encoding":{"id":"ckb-idl-linear-0.1.0"},"witness":[]}
+{"idl_version":"0.1.0","interfaces":[{"encoding":{"id":"ckb-idl-linear-0.1.0"},"fields":[],"id":"lock_witness","kind":"witness_args.lock"}]}
 ```
-```
+
+Interface and field identifiers MUST match `[A-Za-z_][A-Za-z0-9_]*`.
+Interface ids MUST be unique. Extensions are not supported in 0.1.0; unknown
+keys MUST be rejected. Future interface kinds are listed in [ROADMAP.md](ROADMAP.md).

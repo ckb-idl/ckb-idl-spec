@@ -1,1 +1,1 @@
-{"encoding":{"id":"ckb-idl-linear-0.1.0"},"idl_version":"0.1.0","witness":[{"name":"preimage","required":true,"type":"bytes"}]}
+{"idl_version":"0.1.0","interfaces":[{"encoding":{"id":"ckb-idl-linear-0.1.0"},"fields":[{"name":"preimage","required":true,"type":"bytes"}],"id":"lock_witness","kind":"witness_args.lock"}]}

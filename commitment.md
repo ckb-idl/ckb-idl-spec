@@ -1,11 +1,20 @@
 # Commitment
 
+IDL 0.1.0 uses Binding Trailer 1:
+
 ```text
 idl_digest = SHA-256(canonical_idl_bytes)
-code_cell_data = clean_risc_v_executable || idl_digest
+payload = version_u8 || flags_u8 || hash_algorithm_u8 || idl_digest_32
+code_cell_data = executable || payload || payload_length_u32_le || magic_8
 ```
 
-The final 32 bytes bind an exact IDL artifact to executable data. This proves
-binding only, not source, audit, publisher, or registry trust. A future
-self-describing trailer with magic bytes and optional discovery hints is a
-separate binding-format version and MUST preserve an exact IDL digest.
+`version` is 1, `flags` is 0, `hash_algorithm` is 1 (SHA-256), and
+`payload_length` is 35. The eight-byte magic is hex `434b4249444c0000`
+(`CKBIDL` followed by two zero bytes).
+
+A reader checks the final magic, reads the preceding u32 length, validates that
+the payload fits, then reads the payload immediately before the length.
+Everything before the payload is the executable. Unknown versions, flags,
+algorithms, or invalid lengths MUST be rejected. URI hints are deferred.
+
+The trailer proves binding only, not source, audit, publisher, or registry trust.
