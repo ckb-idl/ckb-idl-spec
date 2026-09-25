@@ -13,6 +13,7 @@ This is the entry point for the language-neutral CKB IDL draft.
 - [Client object model](client-object-model.md)
 - [Conformance vectors](test-vectors/README.md)
 - [Stable errors and paths](errors.md)
+- [Semantic type registry](semantic-types.md)
 
 Every document has `idl_version` and `interfaces`. IDL 0.1.0 permits exactly one
 interface, of kind `witness_args.lock`:

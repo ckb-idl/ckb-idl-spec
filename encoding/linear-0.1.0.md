@@ -19,5 +19,17 @@ and are absent by buffer exhaustion. `bytes` with length zero remains present.
 Nested `fields` arrays retain declaration/wire order. Union tags are unique,
 stable, and variants are sorted by tag.
 
+Trailing bytes MUST fail. Length, count, cursor, and allocation calculations
+use checked arithmetic; overflow MUST fail before reading or allocating.
+
+Structs, union variant lists, and encoded vectors MUST be non-empty. Typed
+vector elements are limited to `uint16`, `uint32`, `uint64`, `uint128`, and
+`bytes_fixed_N`; `Vec<u8>` is `bytes`. Vectors of structs, vectors, unions,
+variable bytes, or optional elements are unsupported.
+
+Optional structs and unions are unsupported. Union variants are not optional.
+Fields inside a selected variant follow normal rules, including trailing-only
+optional fields.
+
 Identifiers match `[A-Za-z_][A-Za-z0-9_]*`. Standard semantic types are
 unnamespaced. Custom semantic types use `namespace:name`.

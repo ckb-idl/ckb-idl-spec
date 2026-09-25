@@ -11,3 +11,7 @@ IDL 0.1.0 categories are `invalid_document`, `unsupported_version`,
 `/authorization/value/signature`, or `/signatures/1`. Document-validation
 errors use pointers such as `/interfaces/0/fields/1/type`. Whole-document or
 whole-buffer errors use the empty path `""`.
+
+Language-specific errors MUST map to one stable category and path. Trailer
+version, flag, and length failures use `invalid_trailer`; a digest disagreement
+uses `commitment_mismatch`.
