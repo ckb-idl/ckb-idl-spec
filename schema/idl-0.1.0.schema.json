@@ -41,21 +41,21 @@
       "required": ["name", "type", "required"],
       "properties": {
         "name": { "$ref": "#/$defs/identifier" },
-        "type": {
-          "oneOf": [
-            { "enum": ["uint8", "uint16", "uint32", "uint64", "uint128", "bytes", "vector", "struct", "union", "secp256k1_sig", "secp256k1_pubkey", "schnorr_sig", "blake2b_hash"] },
-            { "type": "string", "pattern": "^[a-z][a-z0-9.-]*:[A-Za-z_][A-Za-z0-9_.-]*$" },
-            { "type": "string", "pattern": "^bytes_fixed_[1-9][0-9]*$" }
-          ]
-        },
-        "wire_type": { "type": "string", "pattern": "^(uint8|uint16|uint32|uint64|uint128|bytes|vector|struct|union|bytes_fixed_[1-9][0-9]*)$" },
+        "type": { "$ref": "#/$defs/typeName" },
+        "wire_type": { "$ref": "#/$defs/wireType" },
         "required": { "type": "boolean" },
         "description": { "type": "string", "maxLength": 4096 },
-        "items": { "$ref": "#/$defs/field" },
-        "fields": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/field" } },
-        "variants": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/variant" } }
+        "items": { "type": "object", "required": ["type"], "additionalProperties": false, "properties": { "type": { "$ref": "#/$defs/typeName" }, "wire_type": { "$ref": "#/$defs/wireType" } } },
+        "fields": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/field" } },
+        "variants": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/variant" } }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "vector" } } }, "then": { "required": ["items"], "not": { "anyOf": [{ "required": ["fields"] }, { "required": ["variants"] }] } }, "else": { "not": { "required": ["items"] } } },
+        { "if": { "properties": { "type": { "const": "struct" } } }, "then": { "required": ["fields"], "not": { "required": ["variants"] } }, "else": { "not": { "required": ["fields"] } } },
+        { "if": { "properties": { "type": { "const": "union" } } }, "then": { "required": ["variants"], "not": { "required": ["fields"] } }, "else": { "not": { "required": ["variants"] } } },
+        { "if": { "properties": { "type": { "$ref": "#/$defs/semanticType" } }, "required": ["type"] }, "then": { "required": ["wire_type"] } }
+      ]
     },
     "variant": {
       "type": "object",
@@ -63,9 +63,12 @@
       "properties": {
         "tag": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
         "name": { "$ref": "#/$defs/identifier" },
-        "fields": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/field" } }
+        "fields": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/field" } }
       },
       "additionalProperties": false
-    }
+    },
+    "semanticType": { "oneOf": [{ "enum": ["secp256k1_sig", "secp256k1_pubkey", "schnorr_sig", "blake2b_hash"] }, { "type": "string", "pattern": "^[a-z][a-z0-9.-]*:[A-Za-z_][A-Za-z0-9_.-]*$" }] },
+    "typeName": { "oneOf": [{ "enum": ["uint8", "uint16", "uint32", "uint64", "uint128", "bytes", "vector", "struct", "union", "secp256k1_sig", "secp256k1_pubkey", "schnorr_sig", "blake2b_hash"] }, { "type": "string", "pattern": "^bytes_fixed_[1-9][0-9]*$" }, { "type": "string", "pattern": "^[a-z][a-z0-9.-]*:[A-Za-z_][A-Za-z0-9_.-]*$" }] },
+    "wireType": { "type": "string", "pattern": "^(uint8|uint16|uint32|uint64|uint128|bytes|vector|struct|union|bytes_fixed_[1-9][0-9]*)$" }
   }
 }
