@@ -40,6 +40,10 @@ authentication step.
 4. Use explicit union tags; do not infer a tag from variant order.
 5. Re-encode and validate the witness before signing/submitting the transaction.
 
-The deployed code hash identifies the executable. The trailer identifies the
+Define whether the deployed code hash means the code cell's data hash or
+`Script.code_hash`. With `hash_type = type`, `Script.code_hash` identifies the
+type script, not one specific code-cell version. Clients must verify the
+selected code cell before trusting its IDL. The trailer identifies the exact
+IDL bytes bound to that code data.
 exact IDL bytes bound to that executable. A registry may help locate artifacts,
 but it is not a replacement for local commitment verification.
