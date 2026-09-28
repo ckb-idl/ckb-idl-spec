@@ -30,6 +30,7 @@ pub struct Witness {
 
 ```rust
 // src/main.rs
+extern crate alloc;
 mod witness;
 use witness::Witness;
 
