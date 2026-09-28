@@ -1,6 +1,6 @@
 # Stable Errors and Paths
 
-IDL 0.1.0 categories are `invalid_document`, `unsupported_version`,
+IDL 0.1.0 categories are `invalid_document`, `invalid_object`, `unsupported_version`,
 `unsupported_interface`, `unsupported_encoding`, `unknown_type`,
 `non_canonical_document`, `field_too_short`, `invalid_length`,
 `invalid_vector_count`, `unknown_union_tag`, `trailing_bytes`,
