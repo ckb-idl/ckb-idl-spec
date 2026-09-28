@@ -17,7 +17,8 @@ type a decoder uses. Optional fields use `required: false`, must be trailing,
 and are absent by buffer exhaustion. `bytes` with length zero remains present.
 
 Nested `fields` arrays retain declaration/wire order. Union tags are unique,
-stable, and variants are sorted by tag.
+stable, and variants are sorted by tag. Field names are unique within each
+record, and variant names are unique within each union.
 
 Trailing bytes MUST fail. Length, count, cursor, and allocation calculations
 use checked arithmetic; overflow MUST fail before reading or allocating.

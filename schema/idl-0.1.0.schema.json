@@ -45,7 +45,7 @@
         "wire_type": { "$ref": "#/$defs/wireType" },
         "required": { "type": "boolean" },
         "description": { "type": "string", "maxLength": 4096 },
-        "items": { "type": "object", "required": ["type"], "additionalProperties": false, "properties": { "type": { "$ref": "#/$defs/typeName" }, "wire_type": { "$ref": "#/$defs/wireType" } } },
+        "items": { "$ref": "#/$defs/vectorItem" },
         "fields": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/field" } },
         "variants": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/variant" } }
       },
@@ -54,7 +54,7 @@
         { "if": { "properties": { "type": { "const": "vector" } } }, "then": { "required": ["items"], "not": { "anyOf": [{ "required": ["fields"] }, { "required": ["variants"] }] } }, "else": { "not": { "required": ["items"] } } },
         { "if": { "properties": { "type": { "const": "struct" } } }, "then": { "required": ["fields"], "not": { "required": ["variants"] } }, "else": { "not": { "required": ["fields"] } } },
         { "if": { "properties": { "type": { "const": "union" } } }, "then": { "required": ["variants"], "not": { "required": ["fields"] } }, "else": { "not": { "required": ["variants"] } } },
-        { "if": { "properties": { "type": { "$ref": "#/$defs/semanticType" } }, "required": ["type"] }, "then": { "required": ["wire_type"] } }
+        { "if": { "properties": { "type": { "$ref": "#/$defs/semanticType" } }, "required": ["type"] }, "then": { "required": ["wire_type"] }, "else": { "not": { "required": ["wire_type"] } } }
       ]
     },
     "variant": {
@@ -68,6 +68,26 @@
       "additionalProperties": false
     },
     "semanticType": { "oneOf": [{ "enum": ["secp256k1_sig", "secp256k1_pubkey", "schnorr_sig", "blake2b_hash"] }, { "type": "string", "pattern": "^[a-z][a-z0-9.-]*:[A-Za-z_][A-Za-z0-9_.-]*$" }] },
+    "vectorItem": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type"],
+          "additionalProperties": false,
+          "properties": { "type": { "$ref": "#/$defs/vectorStructuralType" } }
+        },
+        {
+          "type": "object",
+          "required": ["type", "wire_type"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "$ref": "#/$defs/semanticType" },
+            "wire_type": { "$ref": "#/$defs/vectorStructuralType" }
+          }
+        }
+      ]
+    },
+    "vectorStructuralType": { "oneOf": [{ "enum": ["uint16", "uint32", "uint64", "uint128"] }, { "type": "string", "pattern": "^bytes_fixed_[1-9][0-9]*$" }] },
     "typeName": { "oneOf": [{ "enum": ["uint8", "uint16", "uint32", "uint64", "uint128", "bytes", "vector", "struct", "union", "secp256k1_sig", "secp256k1_pubkey", "schnorr_sig", "blake2b_hash"] }, { "type": "string", "pattern": "^bytes_fixed_[1-9][0-9]*$" }, { "type": "string", "pattern": "^[a-z][a-z0-9.-]*:[A-Za-z_][A-Za-z0-9_.-]*$" }] },
     "wireType": { "type": "string", "pattern": "^(uint8|uint16|uint32|uint64|uint128|bytes|vector|struct|union|bytes_fixed_[1-9][0-9]*)$" }
   }
